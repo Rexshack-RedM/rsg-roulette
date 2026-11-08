@@ -13,14 +13,14 @@ local function openRoulette(tableId)
     currentTableId = tableId
 
     TriggerServerEvent('rsg-roulette:server:join', tableId)
-    NUI.Open({ tableId = tableId, locale = lib.getLocales() })
+    NUI.Open({ tableId = tableId, locale = GetLocaleTable() })
 
     -- auto close if the player walks away or dies while the table is open
     CreateThread(function()
         local coords = RouletteTables[tableId].coords
         local maxDist = Config.InteractDistance + 1.0
         while currentTableId == tableId do
-            local ped = cache.ped
+            local ped = PlayerPedId()
             if IsEntityDead(ped) or #(GetEntityCoords(ped) - coords) > maxDist then
                 closeRoulette()
                 break

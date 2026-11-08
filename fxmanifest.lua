@@ -6,9 +6,7 @@ lua54 'yes'
 author 'RexShack'
 name 'rsg-roulette'
 description 'Multiplayer roulette tables for RSG Framework'
-version '3.0.0'
-
-ox_lib 'locale'
+version '3.0.1'
 
 ui_page 'web/build/index.html'
 
@@ -18,7 +16,7 @@ files {
 }
 
 shared_scripts {
-    '@ox_lib/init.lua',
+    '@rsg-core/shared/locale.lua',
     'shared/config.lua',
 }
 
@@ -34,6 +32,5 @@ server_scripts {
 dependencies {
     'rsg-core',
     'oxmysql',
-    'ox_lib',
-    'ox_target',
+    'rsg-target',
 }

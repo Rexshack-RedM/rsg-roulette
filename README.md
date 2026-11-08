@@ -11,12 +11,11 @@ Multiplayer European roulette tables for **RSG Framework** (RedM). Players share
 - Table props spawn locally within range (no networked duplicates)
 - Optional Discord logging of big wins, jackpots and spins
 - Admins place tables in-game with a live preview; tables are saved to the database
-- ox_target interaction, map blips and ox_lib locales
+- rsg-target interaction, map blips and rsg-core locales (no ox_lib)
 
 ## Dependencies
 - [rsg-core](https://github.com/Rexshack-RedM/rsg-core)
-- [ox_lib](https://github.com/overextended/ox_lib)
-- [ox_target](https://github.com/overextended/ox_target)
+- [rsg-target](https://github.com/Rexshack-RedM/rsg-target)
 - [oxmysql](https://github.com/overextended/oxmysql)
 
 ## Installation
@@ -74,13 +73,13 @@ exports['rsg-roulette']:openRoulette('table_1') -- player must still be in range
 ```
 
 ## Locales
-Every player-facing string (notifications, commands, Discord logs and the whole UI) lives in `locales/*.json` via ox_lib.
+Every player-facing string (notifications, commands, Discord logs and the whole UI) lives in `locales/*.json`, loaded by rsg-core.
 
 Included: `en`, `de`, `el`, `es`, `fr`, `ja`, `nl`, `pl`, `pt-br`, `ro`
 
 Set the server language in `server.cfg`:
 ```cfg
-setr ox:locale "de"
+setr rsg:locale "de"
 ```
 To add a language, copy `locales/en.json` to `locales/<code>.json` and translate the values (keep the `%s` placeholders).
 

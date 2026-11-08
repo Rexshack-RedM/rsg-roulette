@@ -39,11 +39,11 @@ end
 
 local function startPlacement()
     if placing or NUI.IsOpen() then return end
-    if not lib.requestModel(TABLE_MODEL, 10000) then return end
+    if not RSGCore.Functions.RequestModel(TABLE_MODEL, 10000) then return end
     Wait(250) -- let the chat box close and release the Enter key
 
     local cfg = Config.Placement
-    local ped = cache.ped
+    local ped = PlayerPedId()
     local heading = GetEntityHeading(ped)
     local height = 0.0
 
@@ -107,7 +107,7 @@ local function startPlacement()
             height = math.floor(height * 100 + 0.5) / 100,
             status = status,
         }
-        if not lastSent.status then hud.locale = lib.getLocales() end
+        if not lastSent.status then hud.locale = GetLocaleTable() end
         if hud.heading ~= lastSent.heading or hud.height ~= lastSent.height or hud.status ~= lastSent.status then
             NUI.Send('placement', hud)
             lastSent = hud
@@ -120,12 +120,12 @@ local function startPlacement()
                 TriggerServerEvent('rsg-roulette:server:placeTable', coords, heading, room)
                 placing = false
             else
-                lib.notify({ title = locale('ui_title'), description = locale('placement_invalid'), type = 'error', duration = 3000 })
+                RSGCore.Functions.Notify({ title = locale('ui_title'), description = locale('placement_invalid'), type = 'error', duration = 3000 })
             end
         end
 
         if armed and IsDisabledControlJustPressed(0, KEY_CANCEL) or IsEntityDead(ped) then
-            lib.notify({ title = locale('ui_title'), description = locale('placement_cancelled'), type = 'inform', duration = 3000 })
+            RSGCore.Functions.Notify({ title = locale('ui_title'), description = locale('placement_cancelled'), type = 'inform', duration = 3000 })
             placing = false
         end
     end

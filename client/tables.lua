@@ -7,7 +7,7 @@ local function spawnProp(t)
     t.inRange = true
     if t.spawning or (t.entity and DoesEntityExist(t.entity)) then return end
     t.spawning = true
-    if not lib.requestModel(TABLE_MODEL, 10000) then
+    if not RSGCore.Functions.RequestModel(TABLE_MODEL, 10000) then
         print('[rsg-roulette] ERROR: roulette table model failed to load')
         t.spawning = false
         return
@@ -48,8 +48,7 @@ local function removeTable(tableId)
     if not t then return end
     deleteProp(t)
     if t.blip and DoesBlipExist(t.blip) then RemoveBlip(t.blip) end
-    if t.zone then exports.ox_target:removeZone(t.zone) end
-    if t.point then t.point:remove() end
+    if t.zone then exports['rsg-target']:removeZone(t.zone) end
     RouletteTables[tableId] = nil
 end
 
@@ -66,7 +65,7 @@ local function addTable(data)
         t.blip = blip
     end
 
-    t.zone = exports.ox_target:addSphereZone({
+    t.zone = exports['rsg-target']:addSphereZone({
         coords = t.coords,
         radius = 1.5,
         options = {
@@ -80,19 +79,26 @@ local function addTable(data)
         },
     })
 
-    t.point = lib.points.new({
-        coords = t.coords,
-        distance = Config.SpawnDistance,
-        onEnter = function() spawnProp(t) end,
-        onExit = function() deleteProp(t) end,
-    })
 end
+
+-- proximity spawning (replaces lib.points): spawn/despawn props around the player
+CreateThread(function()
+    while true do
+        local pos = GetEntityCoords(PlayerPedId())
+        for _, t in pairs(RouletteTables) do
+            local near = #(pos - t.coords) <= Config.SpawnDistance
+            if near and not t.inRange then spawnProp(t)
+            elseif not near and t.inRange then deleteProp(t) end
+        end
+        Wait(1000)
+    end
+end)
 
 RegisterNetEvent('rsg-roulette:client:addTable', addTable)
 RegisterNetEvent('rsg-roulette:client:removeTable', removeTable)
 
 CreateThread(function()
-    for _, data in ipairs(lib.callback.await('rsg-roulette:server:getTables', false) or {}) do
+    for _, data in ipairs(RSGCore.Functions.AwaitCallback('rsg-roulette:server:getTables', 30000) or {}) do
         addTable(data)
     end
 end)

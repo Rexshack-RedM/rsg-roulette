@@ -1,5 +1,4 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
-lib.locale()
 
 local DATA_FILE      = 'data.json'
 local BET_COOLDOWN   = 150 -- ms between bet actions per player (fast chip clicking still works)
@@ -376,7 +375,7 @@ RegisterNetEvent('rsg-roulette:server:join', function(tableId)
     if not Player or not t or rateLimited(src) then return end
 
     if not isNearTable(src, tableId) then
-        TriggerClientEvent('ox_lib:notify', src, { title = locale('ui_title'), description = locale('too_far'), type = 'error', duration = 5000 })
+        TriggerClientEvent('RSGCore:Client:Notify', src, { title = locale('ui_title'), description = locale('too_far'), type = 'error', duration = 5000 })
         TriggerClientEvent('rsg-roulette:client:forceClose', src)
         return
     end
@@ -505,19 +504,19 @@ local function clientTable(t)
     return { id = t.id, coords = t.coords, heading = t.heading, room = t.room }
 end
 
-lib.callback.register('rsg-roulette:server:getTables', function()
+RSGCore.Functions.CreateCallback('rsg-roulette:server:getTables', function(_, cb)
     while not tablesLoaded do Wait(100) end
     local list = {}
     for _, t in pairs(Tables) do list[#list + 1] = clientTable(t) end
-    return list
+    cb(list)
 end)
 
 local function isAdmin(src)
-    return IsPlayerAceAllowed(src, 'command.placeroulette')
+    return RSGCore.Functions.HasPermission(src, 'admin') or IsPlayerAceAllowed(src, 'command.placeroulette')
 end
 
 local function notify(src, key, nType, ...)
-    TriggerClientEvent('ox_lib:notify', src, { title = locale('ui_title'), description = locale(key, ...), type = nType, duration = 5000 })
+    TriggerClientEvent('RSGCore:Client:Notify', src, { title = locale('ui_title'), description = locale(key, ...), type = nType, duration = 5000 })
 end
 
 local function nearestTable(coords, maxDist)
@@ -529,11 +528,11 @@ local function nearestTable(coords, maxDist)
     return best
 end
 
-lib.addCommand('placeroulette', { help = locale('cmd_place_help'), restricted = 'group.admin' }, function(src)
+RSGCore.Commands.Add('placeroulette', locale('cmd_place_help'), {}, false, function(src)
     TriggerClientEvent('rsg-roulette:client:startPlacement', src)
-end)
+end, 'admin')
 
-lib.addCommand('removeroulette', { help = locale('cmd_remove_help'), restricted = 'group.admin' }, function(src)
+RSGCore.Commands.Add('removeroulette', locale('cmd_remove_help'), {}, false, function(src)
     local ped = GetPlayerPed(src)
     local t = ped ~= 0 and nearestTable(GetEntityCoords(ped), 3.0)
     if not t then return notify(src, 'no_table_nearby', 'error') end
@@ -554,7 +553,7 @@ lib.addCommand('removeroulette', { help = locale('cmd_remove_help'), restricted 
     Tables[t.id] = nil
     TriggerClientEvent('rsg-roulette:client:removeTable', -1, t.id)
     notify(src, 'table_removed', 'success')
-end)
+end, 'admin')
 
 RegisterNetEvent('rsg-roulette:server:placeTable', function(coords, heading, room)
     local src = source
