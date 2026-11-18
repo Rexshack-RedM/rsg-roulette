@@ -93,3 +93,7 @@ npm run build   # type-checks, then builds into web/build
 
 ## Support
 ☕ https://buymeacoffee.com/rexshack
+
+## Database
+
+Tables (`rsg_roulette_tables`) are created automatically on first start while `Config.AutoDatabase = true` (default); the database user needs `CREATE` permission. To install manually, set `Config.AutoDatabase = false` in the config and import `installation/installation.sql` once.

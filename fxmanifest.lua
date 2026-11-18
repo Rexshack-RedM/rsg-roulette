@@ -6,7 +6,7 @@ lua54 'yes'
 author 'RexShack'
 name 'rsg-roulette'
 description 'Multiplayer roulette tables for RSG Framework'
-version '3.0.1'
+version '3.0.2'
 
 ui_page 'web/build/index.html'
 

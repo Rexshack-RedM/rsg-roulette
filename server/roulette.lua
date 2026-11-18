@@ -323,19 +323,21 @@ local function endRound(tableId)
 end
 
 CreateThread(function()
-    MySQL.query.await([[
-        CREATE TABLE IF NOT EXISTS `rsg_roulette_tables` (
-            `id` INT NOT NULL AUTO_INCREMENT,
-            `x` FLOAT NOT NULL,
-            `y` FLOAT NOT NULL,
-            `z` FLOAT NOT NULL,
-            `heading` FLOAT NOT NULL DEFAULT 0,
-            `room` BIGINT NOT NULL DEFAULT 0,
-            `placed_by` VARCHAR(50) DEFAULT NULL,
-            `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`)
-        )
-    ]])
+    if Config.AutoDatabase ~= false then
+        MySQL.query.await([[
+            CREATE TABLE IF NOT EXISTS `rsg_roulette_tables` (
+                `id` INT NOT NULL AUTO_INCREMENT,
+                `x` FLOAT NOT NULL,
+                `y` FLOAT NOT NULL,
+                `z` FLOAT NOT NULL,
+                `heading` FLOAT NOT NULL DEFAULT 0,
+                `room` BIGINT NOT NULL DEFAULT 0,
+                `placed_by` VARCHAR(50) DEFAULT NULL,
+                `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`)
+            )
+        ]])
+    end
     -- add the interior room column to tables created by older versions
     if not MySQL.scalar.await("SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'rsg_roulette_tables' AND COLUMN_NAME = 'room'") then
         MySQL.query.await('ALTER TABLE rsg_roulette_tables ADD COLUMN `room` BIGINT NOT NULL DEFAULT 0')
