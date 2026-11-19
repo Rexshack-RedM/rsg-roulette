@@ -75,7 +75,7 @@ exports['rsg-roulette']:openRoulette('table_1') -- player must still be in range
 ## Locales
 Every player-facing string (notifications, commands, Discord logs and the whole UI) lives in `locales/*.json`, loaded by rsg-core.
 
-Included: `en`, `de`, `el`, `es`, `fr`, `ja`, `nl`, `pl`, `pt-br`, `ro`
+Included: `en`, `de`, `el`, `es`, `fr`, `ja`, `nl`, `pl`, `pt-br`, `ro`, `ru`
 
 Set the server language in `server.cfg`:
 ```cfg

@@ -7,7 +7,7 @@
 - fxmanifest loads `@rsg-core/shared/locale.lua`; Lua uses `locale('key', ...)`.
 - Language: `setr rsg:locale "de"` (falls back to `ox:locale`, then `en`).
 - The NUI receives a flat locale table from `GetLocaleTable()` (client/nui.lua): English merged with the selected language, so missing keys fall back to English.
-- Supported: en, de, el, es, fr, ja, nl, pl, pt-br, ro.
+- Supported: en, de, el, es, fr, ja, nl, pl, pt-br, ro, ru.
 
 ## Commands (admin)
 | Command | Description |
@@ -151,6 +151,6 @@ TriggerClientEvent('rsg-roulette:client:startPlacement', source)
 
 ### Locales
 
-Language files in `locales/`: `de`, `el`, `en`, `es`, `fr`, `ja`, `nl`, `pl`, `pt-br`, `ro`. Set the language with `setr rsg:locale "en"`.
+Language files in `locales/`: `de`, `el`, `en`, `es`, `fr`, `ja`, `nl`, `pl`, `pt-br`, `ro`, `ru`. Set the language with `setr rsg:locale "en"`.
 
 <!-- END AUTO-REFERENCE -->
